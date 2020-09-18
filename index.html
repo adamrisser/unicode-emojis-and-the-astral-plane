@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Unicode, Emojis, and the Astral Plane</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" id="theme" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link
+      rel="stylesheet"
+      href="plugin/highlight/monokai.css"
+      id="highlight-theme"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          Unicode, Emojis, and the Astral Plane
+          <div style="position: relative; width: 473px; margin: auto">
+            <img src="images/plane.png" />
+            <div
+              style="
+                position: absolute;
+                top: 87px;
+                left: 252px;
+                font-size: 70px;
+              "
+            >
+              🧐
+            </div>
+          </div>
+        </section>
+
+        <section>
+          The problem <br />
+          <img src="images/twitter1.png" />
+        </section>
+
+        <section>
+          <img src="images/twitter2.png" />
+          <br />Damn you Jack Dorsey!
+        </section>
+
+        <section>
+          <p>Why?</p>
+          <p>Unicode</p>
+        </section>
+
+        <section>
+          <p>What is Unicode?</p>
+          <p>Unicode is a character encoding <strong>standard</strong>.</p>
+        </section>
+
+        <section>
+          <p>What is Character Encoding?</p>
+          <p>It is a mapping between bytes and a character.</p>
+          <p>100001 ----------------> `a`</p>
+          <p>So why do we need a standard?</p>
+        </section>
+
+        <section>
+          <p>ASCII</p>
+          <p>A 7 bit system to represent 128 characters</p>
+          <p>Great for America! Bad for Japanese, Russians, etc.</p>
+          <p>
+            �&nbsp;&nbsp;&nbsp;&nbsp; �&nbsp;&nbsp;&nbsp;&nbsp;
+            �&nbsp;&nbsp;&nbsp;&nbsp; �&nbsp;&nbsp;&nbsp;&nbsp;
+            �&nbsp;&nbsp;&nbsp;&nbsp;�
+          </p>
+          <img src="images/xkcd.png" />
+        </section>
+
+        <section>
+          <p>Unicode v1: 1991</p>
+          <p>Launches with 7,161 characters</p>
+          <p>Unicode v8: <em>potentially</em> 2,164,864</p>
+          <p>Current mapped? 1,111,998</p>
+        </section>
+
+        <section>
+          <p>How does Unicode work?</p>
+
+          <p>17 different "planes"</p>
+          <p>Plane is a continuous group of 65,536 (2^16) code points.</p>
+        </section>
+
+        <section>
+          <p>Plane 0: Basic Multilingual Plane (BMP)</p>
+          <p>
+            Unification of all prior sets (ASCII, Chinese, Japanese, Cyrillic,
+            etc)
+          </p>
+        </section>
+
+        <section>
+          <p>The Astral Planes</p>
+          <p>
+            The informal name for the supplementary planes of Unicode is "astral
+            planes", since (especially in the late '90s) their use seemed to be
+            as remote as the theosophical "great beyond"
+          </p>
+        </section>
+
+        <section>Code points</section>
+
+        <section><img src="images/draw1.png" /></section>
+
+        <section><img src="images/draw2.png" /></section>
+
+        <section>
+          <p>&lt;meta charset="utf-8" /&gt;</p>
+        </section>
+
+        <section>
+          <p>Why Unicode 8? Why not 16? 32?</p>
+        </section>
+        <section>
+          <p>Unicode 8</p>
+          <ul>
+            <li>8 bit values</li>
+            <li>Backwards compatible with ASCII</li>
+            <li>Never have a string of eight 0s</li>
+          </ul>
+        </section>
+        <section>
+          <p>Unicode 16</p>
+          <ul>
+            <li>16 bit values</li>
+            <li>The middle ground</li>
+            <li>
+              <em>Most</em> characters fit into a fixed-width 16-bit value
+            </li>
+            <li>
+              As long as you don't have Chinese symbols, musical notes, etc, you
+              can assume that each character is 16 bits wide
+            </li>
+          </ul>
+        </section>
+        <section>
+          <p>Unicode 32</p>
+          <ul>
+            <li>32 bit values</li>
+            <li>The most memory</li>
+            <li>Every character has this precise length</li>
+            <li>So string manipulation becomes far simpler</li>
+            <li>
+              You can compute the number of characters in a string simply from
+              the length in bytes of the string.
+              <b>You can't do that with UTF-8.</b>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <p>Wait? You can't do that?</p>
+
+          <pre><code data-trim data-noescape>
+						const place = "cafe\u0301";
+						console.log(place)		=> "café"
+						console.log(place.length)	=> 5
+						console.log(place.split(""))	=> ["c", "a", "f", "e", ""] 
+					</code></pre>
+          <p>
+            \u0301 is a combining mark <br />
+            Modifies what preceeds it
+          </p>
+        </section>
+        <section>Wouldn't it be cool if emojis had combining marks...</section>
+        <section>
+          <p>Skin tones</p>
+          <p>Base on the Fitzpatrick Dermatology scale</p>
+
+          <p>🏻 🏼 🏽 🏾 🏿</p>
+          <pre
+            style="width: 1200px; margin-left: -100px"
+          ><code data-trim data-noescape>
+const scale = ['\u{1F3FC}', '\u{1F3FD}', '\u{1F3FE}', '\u{1F3FF}'];
+
+scale.map((tone) => `👩${tone}`) // => (5) ["👩🏻", "👩🏼", "👩🏽", "👩🏾", "👩🏿"]
+</code></pre>
+        </section>
+        <section>
+          Wouldn't it be cool if you could <em>combine</em> emojis...
+        </section>
+        <section>
+          <p>Zero Width Joiner (ZWJ)</p>
+          <p>👩 \u200D 🚀 == ???</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
